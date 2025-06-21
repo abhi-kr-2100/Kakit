@@ -1,0 +1,26 @@
+#+TITLE: Contributing to Kakit
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+LANGUAGE: en
+
+* What is Kakit?
+Kakit is an Emacs package that brings *Kakoune-inspired modal editing*
+to Emacs, allowing for a "select first, then operate" workflow. For a
+detailed overview, please refer to the [[file:README.org][README.org]] for more details.
+
+* How Kakit Works?
+
+To support Kakoune modes, Kakit utilizes =states=. Each state has its
+own custom keymaps active at Emacs' emulation layer. There's also an
+=Emacs state= which, when active, effectively disables Kakit.
+
+* Coding Conventions
+
+Kakit is programmed in a =Literate programming= environment powered by
+Emacs' Org-mode.
+
+All literate source files are inside the ~src/~ directory. Actual
+source files are generated using ~tangle~ into the ~generatedSrc/~
+directory. The contents of the ~generatedSrc/~ directory should never
+be manually modified; all code changes should be done in the ~src/~
+directory.
