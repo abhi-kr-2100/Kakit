@@ -22,4 +22,6 @@ Disable any other Kakit minor mode."
 Disable any other Kakit minor mode."
   (interactive)
   (kakit--switch-state-local 'insert))
+
+(provide 'kakit-commands-state-switching)
 #+end_src
