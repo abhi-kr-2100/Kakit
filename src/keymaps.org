@@ -1,0 +1,41 @@
+#+TITLE: Keymaps
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+LANGUAGE: en
+#+PROPERTY: header-args :results silent
+
+Kakoune, being a modal text editor, has a different keymap for each
+mode.
+
+Kakit's per-state keymaps provide the same functionality.
+
+* Normal State Keymap
+
+#+begin_src emacs-lisp :tangle generatedSrc/keymaps/normal.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(defvar kakit-normal-state-keymap
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap (kbd "h") 'backward-char)
+    (define-key keymap (kbd "j") 'next-line)
+    (define-key keymap (kbd "k") 'previous-line)
+    (define-key keymap (kbd "l") 'forward-char)
+    (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
+    keymap)
+  "Custom keymaps for Kakit's Normal state.")
+
+#+end_src
+
+* Insert State Keymap
+
+#+begin_src emacs-lisp :tangle generatedSrc/keymaps/insert.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(defvar kakit-insert-state-keymap
+  (let ((keymap (make-sparse-keymap)))
+    (define-key keymap (kbd "<escape>") 'kakit-switch-to-normal-mode-local)
+    keymap)
+  "Custom keymaps for Kakit's Insert state.")
+
+#+end_src
+

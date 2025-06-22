@@ -1,0 +1,41 @@
+#+TITLE: Modes
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+LANGUAGE: en
+#+PROPERTY: header-args :results silent
+
+Each Kakit state has a minor mode associated with it. The minor mode
+allows the state-specific keymap to be applied using Emacs' emulation
+layer.
+
+* Normal Minor Mode
+
+#+begin_src emacs-lisp :tangle generatedSrc/modes/normal.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(define-minor-mode kakit-normal-mode
+  "Kakit's Normal state."
+  :init-value nil
+  (if kakit-normal-mode
+      (setq-local cursor-type 'box)
+    (setq-local cursor-type t)))
+
+(add-to-list 'emulation-mode-map-alists
+             `((kakit-normal-mode . ,kakit-normal-state-keymap)))
+#+end_src
+
+* Insert Minor Mode
+
+#+begin_src emacs-lisp :tangle generatedSrc/modes/insert.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(define-minor-mode kakit-insert-mode
+  "Kakit's Insert state."
+  :init-value nil
+  (if kakit-insert-mode
+      (setq-local cursor-type 'bar)
+    (setq-local cursor-type t)))
+
+(add-to-list 'emulation-mode-map-alists
+             `((kakit-insert-mode . ,kakit-insert-state-keymap)))
+#+end_src

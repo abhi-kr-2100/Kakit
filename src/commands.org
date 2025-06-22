@@ -1,0 +1,25 @@
+#+TITLE: Commands
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+LANGUAGE: en
+#+PROPERTY: header-args :results silent
+
+While Emacs has many of Kakoune's commands built-in, some commands
+still need to be implemented. Such commands are implemented in this
+file.
+
+#+begin_src emacs-lisp :tangle generatedSrc/commands/state-switching.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(defun kakit-switch-to-normal-mode-local ()
+  "Switch to Kakit's Normal state.
+Disable any other Kakit minor mode."
+  (interactive)
+  (kakit--switch-state-local 'normal))
+
+(defun kakit-switch-to-insert-mode-local ()
+  "Switch to Kakit's Insert state.
+Disable any other Kakit minor mode."
+  (interactive)
+  (kakit--switch-state-local 'insert))
+#+end_src
