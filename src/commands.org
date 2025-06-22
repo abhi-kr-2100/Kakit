@@ -90,6 +90,20 @@ If at end of line, do not move."
   (interactive)
   (kakit-forward-word-select))
 
+(defun kakit-select-line-and-next ()
+  "Select the current line and move to the next line.
+
+If a region is active, extend it. If on the last line, just selects
+the line and point stays at the end."
+  (interactive)
+  (unless (use-region-p)
+    (beginning-of-line)
+    (set-mark-command nil))
+  (end-of-line)
+  (unless (eobp)
+    (next-line 1)
+    (beginning-of-line)))
+
 (provide 'kakit-commands-movement)
 #+end_src
 
