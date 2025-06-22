@@ -56,3 +56,18 @@ Disable any other Kakit minor mode."
 
 (provide 'kakit-commands-movement)
 #+end_src
+
+* Text Manipulation Commands
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-text-manipulation.el :mkdirp yes
+;; -*- lexical-binding: t; -*-
+
+(defun kakit-kill-region-or-char ()
+  "If region is active, kill it. Otherwise, delete char at point."
+  (interactive)
+  (if (use-region-p)
+      (kill-region (region-beginning) (region-end))
+    (delete-char 1)))
+
+(provide 'kakit-commands-text-manipulation)
+#+end_src

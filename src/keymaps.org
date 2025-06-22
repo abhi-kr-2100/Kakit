@@ -16,6 +16,7 @@ Kakit's per-state keymaps provide the same functionality.
 
 (require 'kakit-commands-state-switching)
 (require 'kakit-commands-movement)
+(require 'kakit-commands-text-manipulation)
 
 (defvar kakit-normal-state-keymap
   (let ((keymap (make-sparse-keymap)))
@@ -26,6 +27,10 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "w") 'kakit-forward-word-select)
     (define-key keymap (kbd "b") 'kakit-backward-word-select)
     (define-key keymap (kbd "e") 'kakit-word-end-select)
+    (define-key keymap (kbd "d") 'kakit-kill-region-or-char)
+    (define-key keymap (kbd "p") 'yank)
+    (define-key keymap (kbd "u") 'undo-only)
+    (define-key keymap (kbd "U") 'undo-redo)
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
     keymap)
   "Custom keymaps for Kakit's Normal state.")
