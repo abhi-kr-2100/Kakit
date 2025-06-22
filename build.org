@@ -1,0 +1,34 @@
+#+TITLE: Kakit Build Script
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+PROPERTY: header-args:emacs-lisp :tangle build.el
+
+* Build Script
+
+This file, when tangled, produces ~build.el~ which can be used to
+tangle the literate source files in the ~src/~ directory into Emacs
+Lisp source files in the ~src/generatedSrc/~ directory.
+
+To build the project, run:
+
+#+begin_example sh
+emacs --batch --load build.el
+#+end_example
+
+#+begin_src emacs-lisp
+; -*- lexical-binding: t -*-
+
+(require 'org)
+
+(defun kakit-build ()
+  "Tangle all Org files in `src/' into `src/generatedSrc/'."
+  (let* ((project-root (file-name-directory load-file-name))
+         (src-dir (expand-file-name "src" project-root)))
+    (when (file-directory-p src-dir)
+      (dolist (org-file (directory-files src-dir t "\\.org$"))
+        (with-current-buffer (find-file-noselect org-file)
+          (org-babel-tangle)
+          (kill-buffer))))))
+
+(kakit-build)
+#+end_src

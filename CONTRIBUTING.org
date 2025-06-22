@@ -20,7 +20,7 @@ Kakit is programmed in a =Literate programming= environment powered by
 Emacs' Org-mode.
 
 All literate source files are inside the ~src/~ directory. Actual
-source files are generated using ~tangle~ into the ~generatedSrc/~
-directory. The contents of the ~generatedSrc/~ directory should never
-be manually modified; all code changes should be done in the ~src/~
-directory.
+source files are generated using ~tangle~ into the ~src/generatedSrc/~
+directory. The contents of the ~src/generatedSrc/~ directory should
+never be manually modified; all code changes should be done in the
+~src/~ directory.
