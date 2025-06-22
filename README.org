@@ -27,11 +27,11 @@ experience. Kakoune is known for its:
 - *Selection-centric design:* Almost every command operates on a
   selection, which is often expanded or manipulated before an action
   is performed.
-- *Multiple selections:* You can have multiple independent
-  selections, allowing you to perform the same operation on several
-  parts of the text simultaneously.
-- *Powerful primitives:* Kakoune provides a rich set of commands
-  that can be combined in powerful ways to achieve complex edits.
+- *Multiple selections:* You can have multiple independent selections,
+  allowing you to perform the same operation on several parts of the
+  text simultaneously.
+- *Powerful primitives:* Kakoune provides a rich set of commands that
+  can be combined in powerful ways to achieve complex edits.
 
 * Why Kakit?
 
@@ -50,12 +50,14 @@ your favorite editor. This means you can:
 
 * TODO Features [1/2]
 
-Kakit is under active development. Here are some of the key
-features it aims to provide:
+Kakit is under active development. Here are some of the key features
+it aims to provide:
 
 ** DONE Modal editing
 ** TODO Multiple selections
 
 * License
 
-Kakit © 2025 by Abhishek Kumar is licensed under CC BY-NC-ND 4.0. To view a copy of this license, visit https://creativecommons.org/licenses/by-nc-nd/4.0/
+Kakit © 2025 by Abhishek Kumar is licensed under CC BY-NC-ND 4.0. To
+view a copy of this license, visit
+https://creativecommons.org/licenses/by-nc-nd/4.0/
