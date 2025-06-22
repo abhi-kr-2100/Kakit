@@ -7,7 +7,7 @@
 
 This file, when tangled, produces ~build.el~ which can be used to
 tangle the literate source files in the ~src/~ directory into Emacs
-Lisp source files in the ~src/generatedSrc/~ directory.
+Lisp source files in the ~src/kakit/~ directory.
 
 To build the project, run:
 
@@ -21,7 +21,7 @@ emacs --batch --load build.el
 (require 'org)
 
 (defun kakit-build ()
-  "Tangle all Org files in `src/' into `src/generatedSrc/'."
+  "Tangle all Org files in `src/' into `src/kakit/'."
   (let* ((project-root (file-name-directory load-file-name))
          (src-dir (expand-file-name "src" project-root)))
     (when (file-directory-p src-dir)
