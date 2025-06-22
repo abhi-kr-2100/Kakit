@@ -11,7 +11,7 @@ Kakit's per-state keymaps provide the same functionality.
 
 * Normal State Keymap
 
-#+begin_src emacs-lisp :tangle generatedSrc/keymaps/normal.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-normal.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
 (defvar kakit-normal-state-keymap
@@ -28,7 +28,7 @@ Kakit's per-state keymaps provide the same functionality.
 
 * Insert State Keymap
 
-#+begin_src emacs-lisp :tangle generatedSrc/keymaps/insert.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-insert.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
 (defvar kakit-insert-state-keymap
@@ -38,4 +38,3 @@ Kakit's per-state keymaps provide the same functionality.
   "Custom keymaps for Kakit's Insert state.")
 
 #+end_src
-

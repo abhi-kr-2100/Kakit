@@ -11,7 +11,7 @@ Kakit uses states to define these modes where each state has its own
 keymap and its own global minor mode. The global minor modes let Kakit
 load the state-specific keymap using Emacs' emulation layer.
 
-#+begin_src emacs-lisp :tangle generatedSrc/states.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit-states.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
 (defvar kakit--states

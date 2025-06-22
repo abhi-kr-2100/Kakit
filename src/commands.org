@@ -8,7 +8,7 @@ While Emacs has many of Kakoune's commands built-in, some commands
 still need to be implemented. Such commands are implemented in this
 file.
 
-#+begin_src emacs-lisp :tangle generatedSrc/commands/state-switching.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-state-switching.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
 (defun kakit-switch-to-normal-mode-local ()

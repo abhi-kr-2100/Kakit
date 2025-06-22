@@ -8,7 +8,7 @@ The command to active Kakit for the first time is defined in this
 file. It's a globalized minor mode, i.e., it enables Kakit's internal
 local minor modes in all buffers.
 
-#+begin_src emacs-lisp :tangle generatedSrc/kakit.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
 (defun kakit--init-cleanup-helper ()
