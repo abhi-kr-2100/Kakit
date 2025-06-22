@@ -22,6 +22,8 @@ layer.
 
 (add-to-list 'emulation-mode-map-alists
              `((kakit-normal-mode . ,kakit-normal-state-keymap)))
+
+(provide 'kakit-modes-normal)
 #+end_src
 
 * Insert Minor Mode
@@ -38,4 +40,6 @@ layer.
 
 (add-to-list 'emulation-mode-map-alists
              `((kakit-insert-mode . ,kakit-insert-state-keymap)))
+
+(provide 'kakit-modes-insert)
 #+end_src

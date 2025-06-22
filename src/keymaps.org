@@ -24,6 +24,7 @@ Kakit's per-state keymaps provide the same functionality.
     keymap)
   "Custom keymaps for Kakit's Normal state.")
 
+(provide 'kakit-keymaps-normal)
 #+end_src
 
 * Insert State Keymap
@@ -37,4 +38,5 @@ Kakit's per-state keymaps provide the same functionality.
     keymap)
   "Custom keymaps for Kakit's Insert state.")
 
+(provide 'kakit-keymaps-insert)
 #+end_src

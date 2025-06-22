@@ -35,4 +35,6 @@ If another Kakit mode was previously active, disable it."
         (funcall old-mode -1))
       (setq-local kakit--current-state-local new-state)
       (funcall new-mode 1))))
+
+(provide 'kakit-states)
 #+end_src
