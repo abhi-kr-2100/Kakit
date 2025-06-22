@@ -48,12 +48,12 @@ your favorite editor. This means you can:
   extensibility, and extensive ecosystem while benefiting from
   Kakoune-style editing.
 
-* TODO Features [0/2]
+* TODO Features [1/2]
 
 Kakit is under active development. Here are some of the key
 features it aims to provide:
 
-** TODO Modal editing
+** DONE Modal editing
 ** TODO Multiple selections
 
 * License
