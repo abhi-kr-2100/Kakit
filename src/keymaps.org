@@ -14,12 +14,18 @@ Kakit's per-state keymaps provide the same functionality.
 #+begin_src emacs-lisp :tangle kakit/kakit-keymaps-normal.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
+(require 'kakit-commands-state-switching)
+(require 'kakit-commands-movement)
+
 (defvar kakit-normal-state-keymap
   (let ((keymap (make-sparse-keymap)))
     (define-key keymap (kbd "h") 'backward-char)
     (define-key keymap (kbd "j") 'next-line)
     (define-key keymap (kbd "k") 'previous-line)
     (define-key keymap (kbd "l") 'forward-char)
+    (define-key keymap (kbd "w") 'kakit-forward-word-select)
+    (define-key keymap (kbd "b") 'kakit-backward-word-select)
+    (define-key keymap (kbd "e") 'kakit-word-end-select)
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
     keymap)
   "Custom keymaps for Kakit's Normal state.")

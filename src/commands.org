@@ -8,6 +8,8 @@ While Emacs has many of Kakoune's commands built-in, some commands
 still need to be implemented. Such commands are implemented in this
 file.
 
+* State Switching Commands
+
 #+begin_src emacs-lisp :tangle kakit/kakit-commands-state-switching.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
@@ -24,4 +26,33 @@ Disable any other Kakit minor mode."
   (kakit--switch-state-local 'insert))
 
 (provide 'kakit-commands-state-switching)
+#+end_src
+
+* Movement Commands
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-movement.el :mkdirp yes
+;; -*- lexical-binding: t -*-
+
+(defun kakit-forward-word-select ()
+  "Move forward one word and select the region traversed."
+  (interactive)
+  (unless (eobp)
+    (unless (use-region-p)
+      (push-mark (point) t t))
+    (forward-word)))
+
+(defun kakit-backward-word-select ()
+  "Move backward one word and select the region traversed."
+  (interactive)
+  (unless (bobp)
+    (unless (use-region-p)
+      (push-mark (point) t t))
+    (backward-word)))
+
+(defun kakit-word-end-select ()
+  "Move point to the end of the word at point and select the region traversed."
+  (interactive)
+  (kakit-forward-word-select))
+
+(provide 'kakit-commands-movement)
 #+end_src
