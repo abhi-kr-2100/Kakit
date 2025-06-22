@@ -1,0 +1,30 @@
+#+TITLE: Kakit
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+LANGUAGE: en
+#+PROPERTY: header-args :results silent
+
+The command to active Kakit for the first time is defined in this
+file. It's a globalized minor mode, i.e., it enables Kakit's internal
+local minor modes in all buffers.
+
+#+begin_src emacs-lisp :tangle generatedSrc/kakit.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(defun kakit--init-cleanup-helper ()
+  "Turn on Kakit mode and clean up on turn off."
+  (if kakit-mode
+      (kakit--switch-state-local 'normal)
+    (dolist (state-mode kakit--states)
+      (let ((state (car state-mode))
+            (mode (cdr state-mode)))
+        (when (eq state kakit--current-state-local)
+          (setq-local kakit--current-state-local nil)
+          (funcall mode -1))))))
+
+(define-globalized-minor-mode kakit-mode
+  kakit-normal-mode
+  (lambda () (kakit--switch-state-local 'normal))
+  :predicate t
+  (kakit--init-cleanup-helper))
+#+end_src

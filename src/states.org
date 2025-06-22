@@ -1,0 +1,38 @@
+#+TITLE: States
+#+AUTHOR: Abhishek Kumar
+#+EMAIL: abhi.kr.2100@gmail.com
+#+LANGUAGE: en
+#+PROPERTY: header-args :results silent
+
+Kakoune is a modal editor, i.e., depending on the currently active
+mode, the meaning of a key changes.
+
+Kakit uses states to define these modes where each state has its own
+keymap and its own global minor mode. The global minor modes let Kakit
+load the state-specific keymap using Emacs' emulation layer.
+
+#+begin_src emacs-lisp :tangle generatedSrc/states.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(defvar kakit--states
+  '((normal . kakit-normal-mode)
+    (insert . kakit-insert-mode)))
+
+(defvar-local kakit--current-state-local nil
+  "Current Kakit state for the buffer.
+It can be one of `normal' and `insert'.")
+
+(defun kakit--switch-state-local (new-state)
+  "Switch to NEW-STATE in the current buffer.
+If another Kakit mode was previously active, disable it."
+  (unless (eq kakit--current-state-local new-state)
+    (let* ((old-state kakit--current-state-local)
+           (old-mode (alist-get old-state kakit--states))
+           (new-mode (alist-get new-state kakit--states)))
+      (unless new-mode
+        (error "Invalid Kakit state: %S" new-state))
+      (when old-mode
+        (funcall old-mode -1))
+      (setq-local kakit--current-state-local new-state)
+      (funcall new-mode 1))))
+#+end_src
