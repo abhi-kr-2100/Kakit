@@ -61,6 +61,16 @@ If at end of line, do not move."
   (indent-according-to-mode)
   (kakit-switch-to-insert-mode-local))
 
+(defun kakit--switch-to-command-pending-mode-with-prefix (prefix-key)
+  "Switch to command-pending mode and set PREFIX-KEY."
+  (setq-local kakit--command-pending-prefix-key prefix-key)
+  (kakit--switch-state-local 'command-pending))
+
+(defun kakit-switch-to-command-pending-mode-for-replace ()
+  "Enter command-pending mode with 'r' as the prefix key."
+  (interactive)
+  (kakit--switch-to-command-pending-mode-with-prefix 'r))
+
 (provide 'kakit-commands-state-switching)
 #+end_src
 
@@ -131,6 +141,30 @@ Does nothing if the current line is the last line in the buffer."
   (interactive)
   (kakit-kill-region-or-char)
   (kakit-switch-to-insert-mode-local))
+
+(defun kakit--replace-with-char ()
+  "Replace selection or char at point with the last key pressed.
+If a region is active, replace the entire region with the character
+repeated to match the region's length."
+  (when (characterp last-command-event)
+    (let ((char last-command-event))
+      (if (use-region-p)
+          (let* ((beg (region-beginning))
+                 (end (region-end))
+                 (len (- end beg)))
+            (delete-region beg end)
+            (insert-char char len))
+        (progn
+          (kakit-kill-region-or-char)
+          (insert-char char 1))))))
+
+(defun kakit-command-pending-act ()
+  "Act based on `kakit--command-pending-prefix-key'."
+  (interactive)
+  (pcase kakit--command-pending-prefix-key
+    ('r (kakit--replace-with-char))
+    (_ nil))
+  (kakit-switch-to-normal-mode-local))
 
 (provide 'kakit-commands-text-manipulation)
 #+end_src
