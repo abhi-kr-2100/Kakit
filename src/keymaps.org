@@ -94,7 +94,7 @@ and reset it to nil after the command is called."
 (defvar kakit-command-pending-state-keymap
   (let ((keymap (make-sparse-keymap)))
     (define-key keymap (kbd "<escape>") 'kakit-switch-to-normal-mode-local)
-    (define-key keymap [t] 'kakit-command-pending-act)
+    (define-key keymap [t] (kakit--with-prefix-arg 'kakit-command-pending-act))
     keymap)
   "Custom keymaps for Kakit's Command Pending state.")
 

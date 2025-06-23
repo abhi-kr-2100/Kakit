@@ -213,18 +213,19 @@ If CHAR is:
     (?h (beginning-of-line))
     (?l (end-of-line))))
 
-(defun kakit--find-char (char &optional backward include-char)
+(defun kakit--find-char (char &optional backward include-char count)
   "Move point to next occurrence of CHAR.
 If BACKWARD is non-nil, search backward.
 If INCLUDE-CHAR is non-nil, include the character in selection.
+If COUNT is non-nil, repeat the search COUNT times.
 Search is case-sensitive."
   (let* ((to-find (char-to-string char))
          (start-pos (point))
          (case-fold-search nil)
-         (found-pos (if backward
-                       (search-backward to-find nil t)
-                     (search-forward to-find nil t))))
+         (search-fn (if backward 'search-backward 'search-forward))
+         (found-pos (funcall search-fn to-find nil t count)))
     (when found-pos
+      (goto-char found-pos)
       (unless include-char
         (if backward
             (forward-char 1)
@@ -232,20 +233,20 @@ Search is case-sensitive."
       (unless (use-region-p)
         (push-mark start-pos t t)))))
 
-(defun kakit-command-pending-act ()
-  "Act based on `kakit--command-pending-prefix-key'."
-  (interactive)
+(defun kakit-command-pending-act (&optional count)
+  "Act based on `kakit--command-pending-prefix-key'.
+If COUNT is non-nil, it'll used if required by the underlying command."
+  (interactive "P")
   (when (characterp last-command-event)
     (let ((char last-command-event)
-          (prefix kakit--command-pending-prefix-key))
+	  (prefix kakit--command-pending-prefix-key))
       (pcase prefix
-        ('r (kakit--replace-region-or-char-with char))
-        ('g (kakit--goto-command char))
-        ('f (kakit--find-char char nil t))
-        ('F (kakit--find-char char t t))
-        ('t (kakit--find-char char))
-        ('T (kakit--find-char char t nil))
-        (_ nil))))
+	('r (kakit--replace-region-or-char-with char))
+	('g (kakit--goto-command char))
+	('f (kakit--find-char char nil t count))
+	('F (kakit--find-char char t t count))
+	('t (kakit--find-char char nil nil count))
+	('T (kakit--find-char char t nil count)))))
   (kakit-switch-to-normal-mode-local))
 
 (provide 'kakit-commands-text-manipulation)
