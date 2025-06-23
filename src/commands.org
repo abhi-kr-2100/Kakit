@@ -112,5 +112,11 @@ Does nothing if the current line is the last line in the buffer."
   (interactive)
   (join-line -1))
 
+(defun kakit-change ()
+  "Delete the selected region or the character at point, then switch to insert mode."
+  (interactive)
+  (kakit-kill-region-or-char)
+  (kakit-switch-to-insert-mode-local))
+
 (provide 'kakit-commands-text-manipulation)
 #+end_src

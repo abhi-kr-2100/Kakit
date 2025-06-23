@@ -28,6 +28,7 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "b") 'kakit-backward-word-select)
     (define-key keymap (kbd "e") 'kakit-word-end-select)
     (define-key keymap (kbd "d") 'kakit-kill-region-or-char)
+    (define-key keymap (kbd "c") 'kakit-change)
     (define-key keymap (kbd "p") 'yank)
     (define-key keymap (kbd "u") 'undo-only)
     (define-key keymap (kbd "U") 'undo-redo)
