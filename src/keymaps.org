@@ -42,6 +42,10 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
     (define-key keymap (kbd "r") 'kakit-switch-to-command-pending-mode-for-replace)
     (define-key keymap (kbd "g") 'kakit-switch-to-command-pending-mode-for-goto)
+    (define-key keymap (kbd "f") 'kakit-switch-to-command-pending-mode-for-find)
+    (define-key keymap (kbd "F") 'kakit-switch-to-command-pending-mode-for-find-backward)
+    (define-key keymap (kbd "t") 'kakit-switch-to-command-pending-mode-for-till)
+    (define-key keymap (kbd "T") 'kakit-switch-to-command-pending-mode-for-till-backward)
     keymap)
   "Custom keymaps for Kakit's Normal state.")
 
