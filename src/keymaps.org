@@ -25,7 +25,7 @@ and reset it to nil after the command is called."
   `(lambda ()
      (interactive)
      (let ((current-prefix-arg kakit--prefix-argument))
-       (prog1 (call-interactively ',command)
+       (unwind-protect (call-interactively ',command)
          (setq kakit--prefix-argument nil)))))
 
 (defvar kakit-normal-state-keymap
