@@ -76,6 +76,26 @@ If at end of line, do not move."
   (interactive)
   (kakit--switch-to-command-pending-mode-with-prefix 'g))
 
+(defun kakit-switch-to-command-pending-mode-for-find ()
+  "Enter command-pending mode with 'f' as the prefix key."
+  (interactive)
+  (kakit--switch-to-command-pending-mode-with-prefix 'f))
+
+(defun kakit-switch-to-command-pending-mode-for-find-backward ()
+  "Enter command-pending mode with 'F' as the prefix key."
+  (interactive)
+  (kakit--switch-to-command-pending-mode-with-prefix 'F))
+
+(defun kakit-switch-to-command-pending-mode-for-till ()
+  "Enter command-pending mode with 't' as the prefix key."
+  (interactive)
+  (kakit--switch-to-command-pending-mode-with-prefix 't))
+
+(defun kakit-switch-to-command-pending-mode-for-till-backward ()
+  "Enter command-pending mode with 'T' as the prefix key."
+  (interactive)
+  (kakit--switch-to-command-pending-mode-with-prefix 'T))
+
 (provide 'kakit-commands-state-switching)
 #+end_src
 
@@ -174,14 +194,39 @@ If CHAR is:
     (?h (beginning-of-line))
     (?l (end-of-line))))
 
+(defun kakit--find-char (char &optional backward include-char)
+  "Move point to next occurrence of CHAR.
+If BACKWARD is non-nil, search backward.
+If INCLUDE-CHAR is non-nil, include the character in selection.
+Search is case-sensitive."
+  (let* ((to-find (char-to-string char))
+         (start-pos (point))
+         (case-fold-search nil)
+         (found-pos (if backward
+                       (search-backward to-find nil t)
+                     (search-forward to-find nil t))))
+    (when found-pos
+      (unless include-char
+        (if backward
+            (forward-char 1)
+          (backward-char 1)))
+      (unless (use-region-p)
+        (push-mark start-pos t t)))))
+
 (defun kakit-command-pending-act ()
   "Act based on `kakit--command-pending-prefix-key'."
   (interactive)
   (when (characterp last-command-event)
-    (let ((char last-command-event))
-      (pcase kakit--command-pending-prefix-key
-	('r (kakit--replace-region-or-char-with char))
-	('g (kakit--goto-command char)))))
+    (let ((char last-command-event)
+          (prefix kakit--command-pending-prefix-key))
+      (pcase prefix
+        ('r (kakit--replace-region-or-char-with char))
+        ('g (kakit--goto-command char))
+        ('f (kakit--find-char char nil t))
+        ('F (kakit--find-char char t t))
+        ('t (kakit--find-char char))
+        ('T (kakit--find-char char t nil))
+        (_ nil))))
   (kakit-switch-to-normal-mode-local))
 
 (provide 'kakit-commands-text-manipulation)
