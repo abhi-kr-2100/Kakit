@@ -18,18 +18,36 @@ Kakit's per-state keymaps provide the same functionality.
 (require 'kakit-commands-movement)
 (require 'kakit-commands-text-manipulation)
 
+(defun kakit--with-prefix-arg (command)
+  "Execute COMMAND with the current prefix argument.
+If kakit--prefix-argument is non-nil, use it as the prefix argument
+and reset it to nil after the command is called."
+  `(lambda ()
+     (interactive)
+     (let ((current-prefix-arg kakit--prefix-argument))
+       (unwind-protect (call-interactively ',command)
+         (setq kakit--prefix-argument nil)))))
+
 (defvar kakit-normal-state-keymap
   (let ((keymap (make-sparse-keymap)))
-    (define-key keymap (kbd "h") 'backward-char)
-    (define-key keymap (kbd "j") 'next-line)
-    (define-key keymap (kbd "k") 'previous-line)
-    (define-key keymap (kbd "l") 'forward-char)
-    (define-key keymap (kbd "w") 'kakit-forward-word-select)
-    (define-key keymap (kbd "b") 'kakit-backward-word-select)
-    (define-key keymap (kbd "e") 'kakit-word-end-select)
-    (define-key keymap (kbd "x") 'kakit-select-line-and-next)
-    (define-key keymap (kbd "d") 'kakit-kill-region-or-char)
-    (define-key keymap (kbd "c") 'kakit-change)
+    ;; Digit bindings for prefix argument
+    (dotimes (i 10)
+      (define-key keymap (kbd (number-to-string i))
+        `(lambda () (interactive) (kakit-handle-digit-command ,i))))
+    
+    (define-key keymap (kbd "<escape>") 'kakit-reset-prefix-argument)
+    
+    (define-key keymap (kbd "h") (kakit--with-prefix-arg 'backward-char))
+    (define-key keymap (kbd "j") (kakit--with-prefix-arg 'next-line))
+    (define-key keymap (kbd "k") (kakit--with-prefix-arg 'previous-line))
+    (define-key keymap (kbd "l") (kakit--with-prefix-arg 'forward-char))
+    (define-key keymap (kbd "w") (kakit--with-prefix-arg 'kakit-forward-word-select))
+    (define-key keymap (kbd "b") (kakit--with-prefix-arg 'kakit-backward-word-select))
+    (define-key keymap (kbd "e") (kakit--with-prefix-arg 'kakit-word-end-select))
+    (define-key keymap (kbd "x") (kakit--with-prefix-arg 'kakit-select-line-and-next))
+    (define-key keymap (kbd "d") (kakit--with-prefix-arg 'kakit-kill-region-or-char))
+    (define-key keymap (kbd "c") (kakit--with-prefix-arg 'kakit-change))
+    
     (define-key keymap (kbd "p") 'yank)
     (define-key keymap (kbd "u") 'undo-only)
     (define-key keymap (kbd "U") 'undo-redo)
@@ -38,7 +56,7 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "I") 'kakit-insert-at-line-beginning)
     (define-key keymap (kbd "o") 'kakit-open-newline-below)
     (define-key keymap (kbd "O") 'kakit-open-newline-above)
-    (define-key keymap (kbd "J") 'kakit-join-lines)
+    (define-key keymap (kbd "J") (kakit--with-prefix-arg 'kakit-join-lines))
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
     (define-key keymap (kbd "r") 'kakit-switch-to-command-pending-mode-for-replace)
     (define-key keymap (kbd "g") 'kakit-switch-to-command-pending-mode-for-goto)
@@ -76,7 +94,7 @@ Kakit's per-state keymaps provide the same functionality.
 (defvar kakit-command-pending-state-keymap
   (let ((keymap (make-sparse-keymap)))
     (define-key keymap (kbd "<escape>") 'kakit-switch-to-normal-mode-local)
-    (define-key keymap [t] 'kakit-command-pending-act)
+    (define-key keymap [t] (kakit--with-prefix-arg 'kakit-command-pending-act))
     keymap)
   "Custom keymaps for Kakit's Command Pending state.")
 

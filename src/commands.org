@@ -96,6 +96,20 @@ If at end of line, do not move."
   (interactive)
   (kakit--switch-to-command-pending-mode-with-prefix 'T))
 
+(defun kakit-handle-digit-command (digit)
+  "Handle digit input in normal mode to build prefix argument.
+DIGIT is the numeric value of the pressed digit (0-9)."
+  (interactive)
+  (setq kakit--prefix-argument
+        (if kakit--prefix-argument
+            (+ (* kakit--prefix-argument 10) digit)
+          digit)))
+
+(defun kakit-reset-prefix-argument ()
+  "Reset the prefix argument to nil."
+  (interactive)
+  (setq kakit--prefix-argument nil))
+
 (provide 'kakit-commands-state-switching)
 #+end_src
 
@@ -104,40 +118,39 @@ If at end of line, do not move."
 #+begin_src emacs-lisp :tangle kakit/kakit-commands-movement.el :mkdirp yes
 ;; -*- lexical-binding: t -*-
 
-(defun kakit-forward-word-select ()
-  "Move forward one word and select the region traversed."
-  (interactive)
-  (unless (eobp)
-    (unless (use-region-p)
-      (push-mark (point) t t))
-    (forward-word)))
+(defun kakit-forward-word-select (&optional count)
+  "Move forward COUNT words and select the region traversed.
+If COUNT is nil, move forward one word."
+  (interactive "P")
+  (unless (or (eobp) (use-region-p))
+    (push-mark (point) t t))
+  (forward-word count))
 
-(defun kakit-backward-word-select ()
-  "Move backward one word and select the region traversed."
-  (interactive)
-  (unless (bobp)
-    (unless (use-region-p)
-      (push-mark (point) t t))
-    (backward-word)))
+(defun kakit-backward-word-select (&optional count)
+  "Move backward COUNT words and select the region traversed.
+If COUNT is nil, move backward one word."
+  (interactive "P")
+  (unless (or (bobp) (use-region-p))
+    (push-mark (point) t t))
+  (backward-word count))
 
-(defun kakit-word-end-select ()
-  "Move point to the end of the word at point and select the region traversed."
-  (interactive)
-  (kakit-forward-word-select))
+(defun kakit-word-end-select (&optional count)
+  "Move point to the end of COUNT words from point and select the region traversed.
+If COUNT is nil, move to the end of current word."
+  (interactive "P")
+  (kakit-forward-word-select count))
 
-(defun kakit-select-line-and-next ()
-  "Select the current line and move to the next line.
+(defun kakit-select-line-and-next (&optional count)
+  "Select COUNT lines starting from the current line and move to the next line.
+If COUNT is nil, select one line.
 
 If a region is active, extend it. If on the last line, just selects
 the line and point stays at the end."
-  (interactive)
+  (interactive "P")
   (unless (use-region-p)
     (beginning-of-line)
     (set-mark-command nil))
-  (end-of-line)
-  (unless (eobp)
-    (next-line 1)
-    (beginning-of-line)))
+  (next-line count))
 
 (provide 'kakit-commands-movement)
 #+end_src
@@ -147,24 +160,29 @@ the line and point stays at the end."
 #+begin_src emacs-lisp :tangle kakit/kakit-commands-text-manipulation.el :mkdirp yes
 ;; -*- lexical-binding: t; -*-
 
-(defun kakit-kill-region-or-char ()
-  "If region is active, kill it. Otherwise, delete char at point."
-  (interactive)
+(defun kakit-kill-region-or-char (&optional count)
+  "If region is active, kill it. Otherwise, delete COUNT chars at point.
+If COUNT is nil, delete one char."
+  (interactive "P")
   (if (use-region-p)
       (kill-region (region-beginning) (region-end))
-    (delete-char 1)))
+    (delete-char (or count 1))))
 
-(defun kakit-join-lines ()
-  "Move to the next line and join it with the previous line.
+(defun kakit-join-lines (&optional count)
+  "Join COUNT lines starting from the current line.
+If COUNT is nil, join the current line with the next line.
 
 Does nothing if the current line is the last line in the buffer."
-  (interactive)
-  (join-line -1))
+  (interactive "P")
+  (let ((count (or count 1)))
+    (dotimes (_ count)
+      (join-line t))))
 
-(defun kakit-change ()
-  "Delete the selected region or the character at point, then switch to insert mode."
-  (interactive)
-  (kakit-kill-region-or-char)
+(defun kakit-change (&optional count)
+  "Delete the selected region or COUNT chars at point, then switch to insert mode.
+If COUNT is nil, delete one character."
+  (interactive "P")
+  (kakit-kill-region-or-char count)
   (kakit-switch-to-insert-mode-local))
 
 (defun kakit--replace-region-or-char-with (char)
@@ -194,17 +212,17 @@ If CHAR is:
     (?h (beginning-of-line))
     (?l (end-of-line))))
 
-(defun kakit--find-char (char &optional backward include-char)
+(defun kakit--find-char (char &optional backward include-char count)
   "Move point to next occurrence of CHAR.
 If BACKWARD is non-nil, search backward.
 If INCLUDE-CHAR is non-nil, include the character in selection.
+If COUNT is non-nil, repeat the search COUNT times.
 Search is case-sensitive."
   (let* ((to-find (char-to-string char))
          (start-pos (point))
          (case-fold-search nil)
-         (found-pos (if backward
-                       (search-backward to-find nil t)
-                     (search-forward to-find nil t))))
+         (search-fn (if backward 'search-backward 'search-forward))
+         (found-pos (funcall search-fn to-find nil t count)))
     (when found-pos
       (unless include-char
         (if backward
@@ -213,20 +231,20 @@ Search is case-sensitive."
       (unless (use-region-p)
         (push-mark start-pos t t)))))
 
-(defun kakit-command-pending-act ()
-  "Act based on `kakit--command-pending-prefix-key'."
-  (interactive)
+(defun kakit-command-pending-act (&optional count)
+  "Act based on `kakit--command-pending-prefix-key'.
+If COUNT is non-nil, it'll used if required by the underlying command."
+  (interactive "P")
   (when (characterp last-command-event)
     (let ((char last-command-event)
-          (prefix kakit--command-pending-prefix-key))
+	  (prefix kakit--command-pending-prefix-key))
       (pcase prefix
-        ('r (kakit--replace-region-or-char-with char))
-        ('g (kakit--goto-command char))
-        ('f (kakit--find-char char nil t))
-        ('F (kakit--find-char char t t))
-        ('t (kakit--find-char char))
-        ('T (kakit--find-char char t nil))
-        (_ nil))))
+	('r (kakit--replace-region-or-char-with char))
+	('g (kakit--goto-command char))
+	('f (kakit--find-char char nil t count))
+	('F (kakit--find-char char t t count))
+	('t (kakit--find-char char nil nil count))
+	('T (kakit--find-char char t nil count)))))
   (kakit-switch-to-normal-mode-local))
 
 (provide 'kakit-commands-text-manipulation)
