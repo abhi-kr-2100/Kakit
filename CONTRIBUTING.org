@@ -4,6 +4,7 @@
 #+LANGUAGE: en
 
 * What is Kakit?
+
 Kakit is an Emacs package that brings *Kakoune-inspired modal editing*
 to Emacs, allowing for a "select first, then operate" workflow. For a
 detailed overview, please refer to the [[file:README.org][README.org]] for more details.
@@ -24,3 +25,5 @@ source files are generated using ~tangle~ into the ~src/kakit/~
 directory. The contents of the ~src/kakit/~ directory should never be
 manually modified; all code changes should be done in the ~src/~
 directory.
+
+After every change, the version in [[file:src/kakit.org][kakit.org]] should be updated.
