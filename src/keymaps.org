@@ -40,6 +40,7 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "O") 'kakit-open-newline-above)
     (define-key keymap (kbd "J") 'kakit-join-lines)
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
+    (define-key keymap (kbd "r") 'kakit-switch-to-command-pending-mode-for-replace)
     keymap)
   "Custom keymaps for Kakit's Normal state.")
 
@@ -65,9 +66,12 @@ Kakit's per-state keymaps provide the same functionality.
 #+begin_src emacs-lisp :tangle kakit/kakit-keymaps-command-pending.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
+(require 'kakit-commands-text-manipulation)
+
 (defvar kakit-command-pending-state-keymap
   (let ((keymap (make-sparse-keymap)))
     (define-key keymap (kbd "<escape>") 'kakit-switch-to-normal-mode-local)
+    (define-key keymap [t] 'kakit-command-pending-act)
     keymap)
   "Custom keymaps for Kakit's Command Pending state.")
 
