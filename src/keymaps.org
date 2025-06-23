@@ -41,6 +41,7 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "J") 'kakit-join-lines)
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
     (define-key keymap (kbd "r") 'kakit-switch-to-command-pending-mode-for-replace)
+    (define-key keymap (kbd "g") 'kakit-switch-to-command-pending-mode-for-goto)
     keymap)
   "Custom keymaps for Kakit's Normal state.")
 
