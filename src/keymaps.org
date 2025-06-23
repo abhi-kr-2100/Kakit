@@ -18,6 +18,16 @@ Kakit's per-state keymaps provide the same functionality.
 (require 'kakit-commands-movement)
 (require 'kakit-commands-text-manipulation)
 
+(defun kakit--with-prefix-arg (command)
+  "Execute COMMAND with the current prefix argument.
+If kakit--prefix-argument is non-nil, use it as the prefix argument
+and reset it to nil after the command is called."
+  `(lambda ()
+     (interactive)
+     (let ((current-prefix-arg kakit--prefix-argument))
+       (prog1 (call-interactively ',command)
+         (setq kakit--prefix-argument nil)))))
+
 (defvar kakit-normal-state-keymap
   (let ((keymap (make-sparse-keymap)))
     ;; Digit bindings for prefix argument
