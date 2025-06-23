@@ -29,10 +29,16 @@ This file is the entrypoint to the Kakit package.
 (require 'kakit-modes-insert)
 (require 'kakit-modes-normal)
 
+(defun kakit--get-default-state ()
+  "Return the default state for the current buffer."
+  (if (minibufferp)
+      'insert
+    'normal))
+
 (defun kakit--init-cleanup-helper ()
   "Turn on Kakit mode and clean up on turn off."
   (if kakit-mode
-      (kakit--switch-state-local 'normal)
+      (kakit--switch-state-local (kakit--get-default-state))
     (dolist (state-mode kakit--states)
       (let ((state (car state-mode))
             (mode (cdr state-mode)))
@@ -43,7 +49,7 @@ This file is the entrypoint to the Kakit package.
 ;;;###autoload
 (define-globalized-minor-mode kakit-mode
   kakit-normal-mode
-  (lambda () (kakit--switch-state-local 'normal))
+  (lambda () (kakit--switch-state-local (kakit--get-default-state)))
   :predicate t
   (kakit--init-cleanup-helper))
 
