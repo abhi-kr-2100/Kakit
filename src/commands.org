@@ -25,6 +25,42 @@ Disable any other Kakit minor mode."
   (interactive)
   (kakit--switch-state-local 'insert))
 
+(defun kakit-insert-after-char ()
+  "Move cursor forward one character and switch to insert mode.
+If at end of line, do not move."
+  (interactive)
+  (unless (eolp)
+    (forward-char 1))
+  (kakit-switch-to-insert-mode-local))
+
+(defun kakit-insert-at-line-end ()
+  "Move to the end of a line and switch to insert mode."
+  (interactive)
+  (end-of-line)
+  (kakit-switch-to-insert-mode-local))
+
+(defun kakit-insert-at-line-beginning ()
+  "Move to the beginning of a line and switch to insert mode."
+  (interactive)
+  (beginning-of-line)
+  (kakit-switch-to-insert-mode-local))
+
+(defun kakit-open-newline-below ()
+  "Insert a newline after the current line and switch to insert mode."
+  (interactive)
+  (end-of-line)
+  (newline-and-indent)
+  (kakit-switch-to-insert-mode-local))
+
+(defun kakit-open-newline-above ()
+  "Insert a newline before the current line and switch to insert mode."
+  (interactive)
+  (beginning-of-line)
+  (newline)
+  (previous-line)
+  (indent-according-to-mode)
+  (kakit-switch-to-insert-mode-local))
+
 (provide 'kakit-commands-state-switching)
 #+end_src
 
