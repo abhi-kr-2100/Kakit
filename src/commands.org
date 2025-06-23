@@ -176,8 +176,7 @@ Does nothing if the current line is the last line in the buffer."
   (interactive "P")
   (let ((count (or count 1)))
     (dotimes (_ count)
-      (when (and (not (eobp)) (not (bobp)))
-        (join-line t)))))
+      (join-line t))))
 
 (defun kakit-change (&optional count)
   "Delete the selected region or COUNT chars at point, then switch to insert mode.
@@ -225,7 +224,6 @@ Search is case-sensitive."
          (search-fn (if backward 'search-backward 'search-forward))
          (found-pos (funcall search-fn to-find nil t count)))
     (when found-pos
-      (goto-char found-pos)
       (unless include-char
         (if backward
             (forward-char 1)
