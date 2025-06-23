@@ -43,3 +43,25 @@ layer.
 
 (provide 'kakit-modes-insert)
 #+end_src
+
+* Command Pending Minor Mode
+
+#+begin_src emacs-lisp :tangle kakit/kakit-modes-command-pending.el :mkdirp yes
+; -*- lexical-binding: t -*-
+
+(require 'kakit-keymaps-command-pending)
+
+(define-minor-mode kakit-command-pending-mode
+  "Kakit's Command Pending state."
+  :init-value nil
+  (if kakit-command-pending-mode
+      (setq-local cursor-type '(hbar . 10))
+    (setq-local cursor-type t)))
+
+(defvar-local kakit--command-pending-prefix-key nil)
+
+(add-to-list 'emulation-mode-map-alists
+             `((kakit-command-pending-mode . ,kakit-command-pending-state-keymap)))
+
+(provide 'kakit-modes-command-pending)
+#+end_src

@@ -16,7 +16,8 @@ load the state-specific keymap using Emacs' emulation layer.
 
 (defvar kakit--states
   '((normal . kakit-normal-mode)
-    (insert . kakit-insert-mode)))
+    (insert . kakit-insert-mode)
+    (command-pending . kakit-command-pending-mode)))
 
 (defvar-local kakit--current-state-local nil
   "Current Kakit state for the buffer.

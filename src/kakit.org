@@ -28,6 +28,7 @@ This file is the entrypoint to the Kakit package.
 (require 'kakit-keymaps-normal)
 (require 'kakit-modes-insert)
 (require 'kakit-modes-normal)
+(require 'kakit-modes-command-pending)
 
 (defun kakit--get-default-state ()
   "Return the default state for the current buffer."
