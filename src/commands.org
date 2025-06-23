@@ -105,5 +105,12 @@ If at end of line, do not move."
       (kill-region (region-beginning) (region-end))
     (delete-char 1)))
 
+(defun kakit-join-lines ()
+  "Move to the next line and join it with the previous line.
+
+Does nothing if the current line is the last line in the buffer."
+  (interactive)
+  (join-line -1))
+
 (provide 'kakit-commands-text-manipulation)
 #+end_src

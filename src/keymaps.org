@@ -36,6 +36,7 @@ Kakit's per-state keymaps provide the same functionality.
     (define-key keymap (kbd "I") 'kakit-insert-at-line-beginning)
     (define-key keymap (kbd "o") 'kakit-open-newline-below)
     (define-key keymap (kbd "O") 'kakit-open-newline-above)
+    (define-key keymap (kbd "J") 'kakit-join-lines)
     (define-key keymap (kbd "i") 'kakit-switch-to-insert-mode-local)
     keymap)
   "Custom keymaps for Kakit's Normal state.")
