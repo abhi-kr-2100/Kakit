@@ -13,11 +13,17 @@ layer.
 #+begin_src emacs-lisp :tangle kakit/kakit-modes-normal.el :mkdirp yes
 ; -*- lexical-binding: t -*-
 
+(defvar-local kakit--prefix-argument nil
+  "Current prefix argument value in normal mode.
+This is built by typing digits in normal mode.")
+
 (define-minor-mode kakit-normal-mode
   "Kakit's Normal state."
   :init-value nil
   (if kakit-normal-mode
-      (setq-local cursor-type 'box)
+      (progn
+        (setq-local cursor-type 'box)
+        (setq-local kakit--prefix-argument nil))
     (setq-local cursor-type t)))
 
 (add-to-list 'emulation-mode-map-alists

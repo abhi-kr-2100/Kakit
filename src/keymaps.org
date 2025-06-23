@@ -20,6 +20,13 @@ Kakit's per-state keymaps provide the same functionality.
 
 (defvar kakit-normal-state-keymap
   (let ((keymap (make-sparse-keymap)))
+    ;; Digit bindings for prefix argument
+    (dotimes (i 10)
+      (define-key keymap (kbd (number-to-string i))
+        `(lambda () (interactive) (kakit-handle-digit-command ,i))))
+    
+    (define-key keymap (kbd "<escape>") 'kakit-reset-prefix-argument)
+    
     (define-key keymap (kbd "h") 'backward-char)
     (define-key keymap (kbd "j") 'next-line)
     (define-key keymap (kbd "k") 'previous-line)

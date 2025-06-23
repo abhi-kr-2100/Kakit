@@ -96,6 +96,20 @@ If at end of line, do not move."
   (interactive)
   (kakit--switch-to-command-pending-mode-with-prefix 'T))
 
+(defun kakit-handle-digit-command (digit)
+  "Handle digit input in normal mode to build prefix argument.
+DIGIT is the numeric value of the pressed digit (0-9)."
+  (interactive)
+  (setq kakit--prefix-argument
+        (if kakit--prefix-argument
+            (+ (* kakit--prefix-argument 10) digit)
+          digit)))
+
+(defun kakit-reset-prefix-argument ()
+  "Reset the prefix argument to nil."
+  (interactive)
+  (setq kakit--prefix-argument nil))
+
 (provide 'kakit-commands-state-switching)
 #+end_src
 
