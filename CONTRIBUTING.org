@@ -27,3 +27,7 @@ manually modified; all code changes should be done in the ~src/~
 directory.
 
 After every change, the version in [[file:src/kakit.org][kakit.org]] should be updated.
+
+All internal Kakit variables and functions should be prefixed with
+~kakit--~.
+
