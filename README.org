@@ -78,8 +78,8 @@ $ git clone --branch v1.1.0 --single-branch https://github.com/abhi-kr-2100/Kaki
 $ cd Kakit/ && emacs --batch --load build.el
 #+end_src
 
-After the source files are generated (~1 second), add the
-following to your ~init.el~:
+After the source files are generated (around 1 second), add
+the following to your ~init.el~:
 
 #+begin_src emacs-lisp
 (use-package kakit
