@@ -56,7 +56,7 @@ and reset it to nil after the command is called."
       (define-key keymap (kbd (number-to-string i))
         `(lambda () (interactive) (kakit-handle-digit-command ,i))))
     
-    (define-key keymap (kbd "<escape>") 'kakit-reset-prefix-argument)
+    (define-key keymap (kbd "<escape>") 'kakit-reset-to-normal-mode)
     
     (define-key keymap (kbd "h") (kakit--with-prefix-arg 'backward-char))
     (define-key keymap (kbd "j") (kakit--with-prefix-arg 'next-line))
@@ -69,6 +69,7 @@ and reset it to nil after the command is called."
     (define-key keymap (kbd "d") (kakit--with-prefix-arg 'kakit-kill-region-or-char))
     (define-key keymap (kbd "c") (kakit--with-prefix-arg 'kakit-change))
     
+    (define-key keymap (kbd "v") 'set-mark-command)
     (define-key keymap (kbd "y") 'copy-region-as-kill)
     (define-key keymap (kbd "p") 'yank)
     (define-key keymap (kbd "u") 'undo-only)
