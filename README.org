@@ -61,6 +61,39 @@ features it aims to provide:
 ** DONE Modal editing
 ** TODO Multiple selections
 
+* Installation
+
+Kakit is not available from any standard Emacs package
+repository. Nor can you use a package manager to
+automatically install Kakit because it is written in a
+literate style, and, AFAIK, there isn't a package manager
+that automatically generates source files by tangling.
+
+To install Kakit, first clone the repository, generate the
+sources, and then point ~use-package~ to the generated
+source files.
+
+#+begin_src sh
+$ git clone --branch v1.1.0 --single-branch https://github.com/abhi-kr-2100/Kakit
+$ cd Kakit/ && emacs --batch --load build.el
+#+end_src
+
+After the source files are generated (~1 second), add the
+following to your ~init.el~:
+
+#+begin_src emacs-lisp
+(use-package kakit
+  :load-path "~/path/to/Kakit/src/kakit"
+  :ensure nil ; since Kakit is available locally, Emacs
+              ; doesn't need ensure it's installed
+  
+  ; this will enable Kakit mode globally. Remove this line
+  ; if you don't want to. You can still manually run
+  ; `M-x kakit-normal-mode` to turn on Kakit for only the
+  ; current buffer.
+  :config (kakit-mode +1))
+#+end_src
+
 * License
 
 Kakit © 2025 by Abhishek Kumar is licensed under CC BY-NC-ND
