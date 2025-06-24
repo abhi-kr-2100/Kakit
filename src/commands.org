@@ -165,6 +165,7 @@ arguments are recorded only in the normal state.
 ; -*- lexical-binding: t -*-
 
 (require 'kakit-modes-normal-prefix-arg)
+(require 'kakit-states-state-switching-helper)
 
 (defun kakit-handle-digit-command (digit)
   "Handle digit input in normal mode to build prefix argument.
@@ -175,10 +176,14 @@ DIGIT is the numeric value of the pressed digit (0-9)."
             (+ (* kakit--prefix-argument 10) digit)
           digit)))
 
-(defun kakit-reset-prefix-argument ()
-  "Reset the prefix argument to nil."
+(defun kakit-reset-to-normal-mode ()
+  "Reset the prefix argument to nil, deactivate any active region,
+and switch to normal mode. This function brings the editor back
+to a clean normal mode state."
   (interactive)
-  (setq-local kakit--prefix-argument nil))
+  (setq-local kakit--prefix-argument nil)
+  (deactivate-mark)
+  (kakit--switch-state-local 'normal))
 
 (provide 'kakit-commands-handle-prefix-arg)
 #+end_src
