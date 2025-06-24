@@ -5,29 +5,33 @@
 
 * What is Kakit?
 
-Kakit is an Emacs package that brings *Kakoune-inspired modal editing*
-to Emacs, allowing for a "select first, then operate" workflow. For a
-detailed overview, please refer to the [[file:README.org][README.org]] for more details.
+Kakit is an Emacs package that brings *Kakoune-inspired
+modal editing* to Emacs, allowing for a "select first, then
+operate" workflow. For a detailed overview, please refer to
+the [[file:README.org][README.org]] for more details.
 
 * How Kakit Works?
 
-To support Kakoune modes, Kakit utilizes =states=. Each state has its
-own custom keymaps active at Emacs' emulation layer. There's also an
-=Emacs state= which, when active, effectively disables Kakit.
+To support Kakoune modes, Kakit utilizes =states=. Each
+state has its own custom keymaps active at Emacs' emulation
+layer.
 
 * Coding Conventions
 
-Kakit is programmed in a =Literate programming= environment powered by
-Emacs' Org-mode.
+Kakit is programmed in a =Literate programming= environment
+powered by Emacs' Org-mode.
 
-All literate source files are inside the ~src/~ directory. Actual
-source files are generated using ~tangle~ into the ~src/kakit/~
-directory. The contents of the ~src/kakit/~ directory should never be
-manually modified; all code changes should be done in the ~src/~
-directory.
+All literate source files are inside the ~src/~
+directory. Actual source files are generated using ~tangle~
+into the ~src/kakit/~ directory. The contents of the
+~src/kakit/~ directory should never be manually modified;
+all code changes should be done in the ~src/~ directory only.
 
-For significant changes like new features or bug fixes, the version in
-[[file:src/kakit.org][kakit.org]] should be updated.
+The [[file:build.org][build.org]] file tangles to an Emacs-lisp script that can
+build all source files at once.
 
-All internal Kakit variables and functions should be prefixed with
-~kakit--~.
+For significant changes like new features or bug fixes, the
+version in [[file:src/kakit.org][kakit.org]] should be updated.
+
+All internal Kakit variables and functions should be
+prefixed with ~kakit--~.

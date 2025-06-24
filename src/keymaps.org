@@ -2,21 +2,26 @@
 #+AUTHOR: Abhishek Kumar
 #+EMAIL: abhi.kr.2100@gmail.com
 #+LANGUAGE: en
-#+PROPERTY: header-args :results silent
+#+PROPERTY: header-args :results silent :mkdirp yes
 
-Kakoune, being a modal text editor, has a different keymap for each
-mode.
+Kakoune, being a modal text editor, has a different keymap
+for each mode.
 
 Kakit's per-state keymaps provide the same functionality.
 
-* Normal State Keymap
+* Prefix Argument Helper
 
-#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-normal.el :mkdirp yes
+Kakit keeps its prefix argument separate from Emacs'. While
+this might change in the future, this is an intentional
+albeit not thoroughly thought out design decision.
+
+The ~kakit--with-prefix-arg~ helper passes Kakit's prefix
+argument to a command that accepts Emacs' prefix argument.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-helper.el
 ; -*- lexical-binding: t -*-
 
-(require 'kakit-commands-state-switching)
-(require 'kakit-commands-movement)
-(require 'kakit-commands-text-manipulation)
+(require 'kakit-modes-normal-prefix-arg)
 
 (defun kakit--with-prefix-arg (command)
   "Execute COMMAND with the current prefix argument.
@@ -27,6 +32,22 @@ and reset it to nil after the command is called."
      (let ((current-prefix-arg kakit--prefix-argument))
        (unwind-protect (call-interactively ',command)
          (setq kakit--prefix-argument nil)))))
+
+(provide 'kakit-keymaps-helper)
+#+end_src
+
+* Normal State Keymap
+
+#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-normal.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-keymaps-helper)
+(require 'kakit-commands-handle-prefix-arg)
+(require 'kakit-commands-movement-word-based)
+(require 'kakit-commands-movement-line-based)
+(require 'kakit-commands-text-manipulation)
+(require 'kakit-commands-switch-to-insert-mode)
+(require 'kakit-commands-state-switch-to-command-pending-state)
 
 (defvar kakit-normal-state-keymap
   (let ((keymap (make-sparse-keymap)))
@@ -72,8 +93,10 @@ and reset it to nil after the command is called."
 
 * Insert State Keymap
 
-#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-insert.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-insert.el
 ; -*- lexical-binding: t -*-
+
+(require 'kakit-commands-purely-state-switching)
 
 (defvar kakit-insert-state-keymap
   (let ((keymap (make-sparse-keymap)))
@@ -86,10 +109,12 @@ and reset it to nil after the command is called."
 
 * Command Pending State Keymap
 
-#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-command-pending.el :mkdirp yes
+#+begin_src emacs-lisp :tangle kakit/kakit-keymaps-command-pending.el
 ; -*- lexical-binding: t -*-
 
-(require 'kakit-commands-text-manipulation)
+(require 'kakit-commands-purely-state-switching)
+(require 'kakit-keymaps-helper)
+(require 'kakit-commands-movement-command-pending)
 
 (defvar kakit-command-pending-state-keymap
   (let ((keymap (make-sparse-keymap)))

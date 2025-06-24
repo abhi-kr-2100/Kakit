@@ -2,22 +2,41 @@
 #+AUTHOR: Abhishek Kumar
 #+EMAIL: abhi.kr.2100@gmail.com
 #+LANGUAGE: en
-#+PROPERTY: header-args :results silent
+#+PROPERTY: header-args :results silent :mkdirp yes
 
-Kakoune is a modal editor, i.e., depending on the currently active
-mode, the meaning of a key changes.
+Kakoune is a modal editor, i.e., depending on the currently
+active mode, the meaning of a key changes.
 
-Kakit uses states to define these modes where each state has its own
-keymap and its own global minor mode. The global minor modes let Kakit
-load the state-specific keymap using Emacs' emulation layer.
+Kakit uses states to define these modes where each state has
+its own keymap and its own global minor mode. The global
+minor modes let Kakit load the state-specific keymap using
+Emacs' emulation layer.
 
-#+begin_src emacs-lisp :tangle kakit/kakit-states.el :mkdirp yes
+* State-Mode Map
+
+Each Kakit state maps to a Kakit minor mode.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-states-state-mode-map.el
 ; -*- lexical-binding: t -*-
+
+(require 'kakit-modes-normal)
+(require 'kakit-modes-insert)
+(require 'kakit-modes-command-pending)
 
 (defvar kakit--states
   '((normal . kakit-normal-mode)
     (insert . kakit-insert-mode)
     (command-pending . kakit-command-pending-mode)))
+
+(provide 'kakit-states-state-mode-map)
+#+end_src
+
+* State Switching Helper
+
+#+begin_src emacs-lisp :tangle kakit/kakit-states-state-switching-helper.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-states-state-mode-map)
 
 (defvar-local kakit--current-state-local nil
   "Current Kakit state for the buffer.
@@ -37,5 +56,5 @@ If another Kakit mode was previously active, disable it."
       (setq-local kakit--current-state-local new-state)
       (funcall new-mode 1))))
 
-(provide 'kakit-states)
+(provide 'kakit-states-state-switching-helper)
 #+end_src

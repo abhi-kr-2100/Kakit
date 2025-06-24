@@ -5,59 +5,64 @@
 
 * What is Kakit?
 
-Kakit is an Emacs package that brings the powerful and intuitive modal
-editing experience of Kakoune directly into your Emacs environment. If
-you're a fan of Kakoune's "select first, then operate" paradigm, Kakit
-aims to provide a similar workflow without needing to leave Emacs.
-It's designed to offer a fluid and efficient editing style that can
-significantly speed up your text manipulation.
+Kakit is an Emacs package that brings the powerful and
+intuitive modal editing experience of Kakoune directly into
+your Emacs environment. If you're a fan of Kakoune's "select
+first, then operate" paradigm, Kakit aims to provide a
+similar workflow without needing to leave Emacs.  It's
+designed to offer a fluid and efficient editing style that
+can significantly speed up your text manipulation.
 
 * What is Kakoune?
 
-[[https://kakoune.org/][Kakoune]] is a free, open-source modal code editor that takes a unique
-approach to text editing. Unlike traditional editors where you often
-specify an action and then a target (e.g., "delete line"), Kakoune
-encourages you to *first select the text you want to operate on*, and
-then *apply a command to that selection*. This "selection-first"
+[[https://kakoune.org/][Kakoune]] is a free, open-source modal code editor that takes
+a unique approach to text editing. Unlike traditional
+editors where you often specify an action and then a target
+(e.g., "delete line"), Kakoune encourages you to *first
+select the text you want to operate on*, and then *apply a
+command to that selection*. This "selection-first"
 philosophy makes for a highly interactive and visual editing
 experience. Kakoune is known for its:
 
-- *Modal editing:* It operates in different modes (e.g., normal,
-  insert), where keys have different meanings.
-- *Selection-centric design:* Almost every command operates on a
-  selection, which is often expanded or manipulated before an action
-  is performed.
-- *Multiple selections:* You can have multiple independent selections,
-  allowing you to perform the same operation on several parts of the
-  text simultaneously.
-- *Powerful primitives:* Kakoune provides a rich set of commands that
-  can be combined in powerful ways to achieve complex edits.
+- *Modal editing:* It operates in different modes (e.g.,
+  normal, insert), where keys have different meanings.
+- *Selection-centric design:* Almost every command operates
+  on a selection, which is often expanded or manipulated
+  before an action is performed.
+- *Multiple selections:* You can have multiple independent
+  selections, allowing you to perform the same operation on
+  several parts of the text simultaneously.
+- *Powerful primitives:* Kakoune provides a rich set of
+  commands that can be combined in powerful ways to achieve
+  complex edits.
 
 * Why Kakit?
 
-Emacs is renowned for its extensibility and its ability to be molded
-into virtually any editing environment. Kakit leverages this power to
-integrate the best aspects of Kakoune's modal editing directly into
-your favorite editor. This means you can:
+Emacs is renowned for its extensibility and its ability to
+be molded into virtually any editing environment. Kakit
+leverages this power to integrate the best aspects of
+Kakoune's modal editing directly into your favorite
+editor. This means you can:
 
-- *Enjoy Kakoune's efficiency within Emacs:* Get the "select first,
-  then operate" workflow without switching editors.
-- *Combine with existing Emacs packages:* Seamlessly integrate Kakit
-  with your current Emacs configuration, keybindings, and packages.
-- *Leverage Emacs's power:* Access Emacs's rich features, Lisp
-  extensibility, and extensive ecosystem while benefiting from
-  Kakoune-style editing.
+- *Enjoy Kakoune's efficiency within Emacs:* Get the "select
+  first, then operate" workflow without switching editors.
+- *Combine with existing Emacs packages:* Seamlessly
+  integrate Kakit with your current Emacs configuration,
+  keybindings, and packages.
+- *Leverage Emacs's power:* Access Emacs's rich features,
+  Lisp extensibility, and extensive ecosystem while
+  benefiting from Kakoune-style editing.
 
 * TODO Features [1/2]
 
-Kakit is under active development. Here are some of the key features
-it aims to provide:
+Kakit is under active development. Here are some of the key
+features it aims to provide:
 
 ** DONE Modal editing
 ** TODO Multiple selections
 
 * License
 
-Kakit © 2025 by Abhishek Kumar is licensed under CC BY-NC-ND 4.0. To
-view a copy of this license, visit
+Kakit © 2025 by Abhishek Kumar is licensed under CC BY-NC-ND
+4.0. To view a copy of this license, visit
 https://creativecommons.org/licenses/by-nc-nd/4.0/
