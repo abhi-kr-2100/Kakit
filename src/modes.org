@@ -2,20 +2,35 @@
 #+AUTHOR: Abhishek Kumar
 #+EMAIL: abhi.kr.2100@gmail.com
 #+LANGUAGE: en
-#+PROPERTY: header-args :results silent
+#+PROPERTY: header-args :results silent :mkdirp yes
 
-Each Kakit state has a minor mode associated with it. The minor mode
-allows the state-specific keymap to be applied using Emacs' emulation
-layer.
+Each Kakit state has a minor mode associated with it. The
+minor mode allows the state-specific keymap to be applied
+using Emacs' emulation layer.
 
 * Normal Minor Mode
 
-#+begin_src emacs-lisp :tangle kakit/kakit-modes-normal.el :mkdirp yes
+** Prefix Argument
+
+For simplicity, Kakit only accepts prefix arguments in
+normal mode.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-modes-normal-prefix-arg.el
 ; -*- lexical-binding: t -*-
 
 (defvar-local kakit--prefix-argument nil
   "Current prefix argument value in normal mode.
 This is built by typing digits in normal mode.")
+
+(provide 'kakit-modes-normal-prefix-arg)
+#+end_src
+
+** Minor Mode
+
+#+begin_src emacs-lisp :tangle kakit/kakit-modes-normal.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-modes-normal-prefix-arg)
 
 (define-minor-mode kakit-normal-mode
   "Kakit's Normal state."
@@ -25,9 +40,6 @@ This is built by typing digits in normal mode.")
         (setq-local cursor-type 'box)
         (setq-local kakit--prefix-argument nil))
     (setq-local cursor-type t)))
-
-(add-to-list 'emulation-mode-map-alists
-             `((kakit-normal-mode . ,kakit-normal-state-keymap)))
 
 (provide 'kakit-modes-normal)
 #+end_src
@@ -44,18 +56,30 @@ This is built by typing digits in normal mode.")
       (setq-local cursor-type 'bar)
     (setq-local cursor-type t)))
 
-(add-to-list 'emulation-mode-map-alists
-             `((kakit-insert-mode . ,kakit-insert-state-keymap)))
-
 (provide 'kakit-modes-insert)
 #+end_src
 
 * Command Pending Minor Mode
 
-#+begin_src emacs-lisp :tangle kakit/kakit-modes-command-pending.el :mkdirp yes
+** Prefix Key
+
+A command-pending command starts with a prefix which
+determines what kind of operation should be performed.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-modes-command-pending-prefix-key.el
 ; -*- lexical-binding: t -*-
 
-(require 'kakit-keymaps-command-pending)
+(defvar-local kakit--command-pending-prefix-key nil)
+
+(provide 'kakit-modes-command-pending-prefix-key)
+#+end_src
+
+** Minor Mode
+
+#+begin_src emacs-lisp :tangle kakit/kakit-modes-command-pending.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-modes-command-pending-prefix-key)
 
 (define-minor-mode kakit-command-pending-mode
   "Kakit's Command Pending state."
@@ -65,11 +89,6 @@ This is built by typing digits in normal mode.")
     (progn
       (setq-local kakit--command-pending-prefix-key nil)
       (setq-local cursor-type t))))
-
-(defvar-local kakit--command-pending-prefix-key nil)
-
-(add-to-list 'emulation-mode-map-alists
-             `((kakit-command-pending-mode . ,kakit-command-pending-state-keymap)))
 
 (provide 'kakit-modes-command-pending)
 #+end_src

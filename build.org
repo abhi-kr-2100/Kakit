@@ -5,9 +5,10 @@
 
 * Build Script
 
-This file, when tangled, produces ~build.el~ which can be used to
-tangle the literate source files in the ~src/~ directory into Emacs
-Lisp source files in the ~src/kakit/~ directory.
+This file, when tangled, produces ~build.el~ which can be
+used to tangle the literate source files in the ~src/~
+directory into Emacs Lisp source files in the ~src/kakit/~
+directory.
 
 To build the project, run:
 

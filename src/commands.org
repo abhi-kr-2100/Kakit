@@ -2,16 +2,25 @@
 #+AUTHOR: Abhishek Kumar
 #+EMAIL: abhi.kr.2100@gmail.com
 #+LANGUAGE: en
-#+PROPERTY: header-args :results silent
+#+PROPERTY: header-args :results silent :mkdirp yes
 
-While Emacs has many of Kakoune's commands built-in, some commands
-still need to be implemented. Such commands are implemented in this
-file.
+While Emacs has many of Kakoune's commands built-in, some
+commands still need to be implemented. Such commands are
+implemented in this file.
 
 * State Switching Commands
 
-#+begin_src emacs-lisp :tangle kakit/kakit-commands-state-switching.el :mkdirp yes
+The state switching commands primarily switch from one Kakit
+state to another. Some have side-effects, such as deleting
+the selected region before switching to the insert state
+from the normal state.
+
+** Purely State Switching Commands
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-purely-state-switching.el
 ; -*- lexical-binding: t -*-
+
+(require 'kakit-states-state-switching-helper)
 
 (defun kakit-switch-to-normal-mode-local ()
   "Switch to Kakit's Normal state.
@@ -24,6 +33,20 @@ Disable any other Kakit minor mode."
 Disable any other Kakit minor mode."
   (interactive)
   (kakit--switch-state-local 'insert))
+
+(provide 'kakit-commands-purely-state-switching)
+#+end_src
+
+** Switch to Insert Mode
+
+For convenience, modal editors provide various ways to get
+into the editing/inserting state: some position the cursor
+at the right place, others indent into a block.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-switch-to-insert-mode.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-commands-purely-state-switching)
 
 (defun kakit-insert-after-char ()
   "Move cursor forward one character and switch to insert mode.
@@ -61,6 +84,36 @@ If at end of line, do not move."
   (indent-according-to-mode)
   (kakit-switch-to-insert-mode-local))
 
+(provide 'kakit-commands-switch-to-insert-mode)
+#+end_src
+
+** Switching to Command-Pending State
+
+Some operations switch from normal state to the insert
+state, make an edit, and then switch back to the normal
+state.
+
+Such operations are modeled by Kakit using the
+Command-Pending state.
+
+A complete command consists of a prefix key which determines
+the operation to perform followed by an argument for the
+operation.
+
+For example, consider replacing the character at point with
+another character. The prefix will be 'r (for replace) and
+the argument will be the character that should be inserted
+in the place of the character that is present at point.
+
+From normal mode, command-pending mode is entered into
+always with a prefix.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-state-switch-to-command-pending-state.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-states-state-switching-helper)
+(require 'kakit-modes-command-pending-prefix-key)
+
 (defun kakit--switch-to-command-pending-mode-with-prefix (prefix-key)
   "Switch to command-pending mode and set PREFIX-KEY."
   (setq-local kakit--command-pending-prefix-key prefix-key)
@@ -96,11 +149,28 @@ If at end of line, do not move."
   (interactive)
   (kakit--switch-to-command-pending-mode-with-prefix 'T))
 
+(provide 'kakit-commands-state-switch-to-command-pending-state)
+#+end_src
+
+** Handling Prefix Argument
+
+Commands may be passed a prefix argument which modifies the
+effect they have. Prefix arguments are always a positive
+integer.
+
+Additionally, to keep things simple, for now, prefix
+arguments are recorded only in the normal state.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-handle-prefix-arg.el
+; -*- lexical-binding: t -*-
+
+(require 'kakit-modes-normal-prefix-arg)
+
 (defun kakit-handle-digit-command (digit)
   "Handle digit input in normal mode to build prefix argument.
 DIGIT is the numeric value of the pressed digit (0-9)."
   (interactive)
-  (setq kakit--prefix-argument
+  (setq-local kakit--prefix-argument
         (if kakit--prefix-argument
             (+ (* kakit--prefix-argument 10) digit)
           digit)))
@@ -108,14 +178,24 @@ DIGIT is the numeric value of the pressed digit (0-9)."
 (defun kakit-reset-prefix-argument ()
   "Reset the prefix argument to nil."
   (interactive)
-  (setq kakit--prefix-argument nil))
+  (setq-local kakit--prefix-argument nil))
 
-(provide 'kakit-commands-state-switching)
+(provide 'kakit-commands-handle-prefix-arg)
 #+end_src
 
 * Movement Commands
 
-#+begin_src emacs-lisp :tangle kakit/kakit-commands-movement.el :mkdirp yes
+Kakit provides all the usual movement commands but with a
+twist: some of these select a region. If a region is already
+present, they expand it. This behavior is different from Vim
+as well as Emacs.
+
+Separate commands are not required for hjkl motions because
+Emacs already has suitable implementations for those.
+
+** Word Based Motions
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-movement-word-based.el
 ;; -*- lexical-binding: t -*-
 
 (defun kakit-forward-word-select (&optional count)
@@ -140,6 +220,14 @@ If COUNT is nil, move to the end of current word."
   (interactive "P")
   (kakit-forward-word-select count))
 
+(provide 'kakit-commands-movement-word-based)
+#+end_src
+
+** Line Based Motions
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-movement-line-based.el
+; -*- lexical-binding: t -*-
+
 (defun kakit-select-line-and-next (&optional count)
   "Select COUNT lines starting from the current line and move to the next line.
 If COUNT is nil, select one line.
@@ -152,52 +240,20 @@ the line and point stays at the end."
     (set-mark-command nil))
   (next-line count))
 
-(provide 'kakit-commands-movement)
+(provide 'kakit-commands-movement-line-based)
 #+end_src
 
-* Text Manipulation Commands
+** Command-Pending Based Motions
 
-#+begin_src emacs-lisp :tangle kakit/kakit-commands-text-manipulation.el :mkdirp yes
-;; -*- lexical-binding: t; -*-
+It's popular in Vim and Kakoune to quickly move to positions
+in a file based on the ~g~ command. Moving to or till a
+character is also very popular.
 
-(defun kakit-kill-region-or-char (&optional count)
-  "If region is active, kill it. Otherwise, delete COUNT chars at point.
-If COUNT is nil, delete one char."
-  (interactive "P")
-  (if (use-region-p)
-      (kill-region (region-beginning) (region-end))
-    (delete-char (or count 1))))
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-movement-command-pending.el
+; -*- lexical-binding: t -*-
 
-(defun kakit-join-lines (&optional count)
-  "Join COUNT lines starting from the current line.
-If COUNT is nil, join the current line with the next line.
-
-Does nothing if the current line is the last line in the buffer."
-  (interactive "P")
-  (let ((count (or count 1)))
-    (dotimes (_ count)
-      (join-line t))))
-
-(defun kakit-change (&optional count)
-  "Delete the selected region or COUNT chars at point, then switch to insert mode.
-If COUNT is nil, delete one character."
-  (interactive "P")
-  (kakit-kill-region-or-char count)
-  (kakit-switch-to-insert-mode-local))
-
-(defun kakit--replace-region-or-char-with (char)
-  "Replace selection or char at point with the CHAR.
-If a region is active, replace the entire region with CHAR
-repeated to match the region's length."
-  (if (use-region-p)
-      (let* ((beg (region-beginning))
-             (end (region-end))
-             (len (- end beg)))
-        (delete-region beg end)
-        (insert-char char len))
-    (progn
-      (kakit-kill-region-or-char)
-      (insert-char char 1))))
+(require 'kakit-modes-command-pending-prefix-key)
+(require 'kakit-commands-purely-state-switching)
 
 (defun kakit--goto-command (char)
   "Execute goto command based on CHAR.
@@ -246,6 +302,57 @@ If COUNT is non-nil, it'll used if required by the underlying command."
 	('t (kakit--find-char char nil nil count))
 	('T (kakit--find-char char t nil count)))))
   (kakit-switch-to-normal-mode-local))
+
+(provide 'kakit-commands-movement-command-pending)
+#+end_src
+
+* Text Manipulation Commands
+
+The primary purpose of the commands below is to modify text.
+
+#+begin_src emacs-lisp :tangle kakit/kakit-commands-text-manipulation.el
+;; -*- lexical-binding: t -*-
+
+(require 'kakit-commands-purely-state-switching)
+
+(defun kakit-kill-region-or-char (&optional count)
+  "If region is active, kill it. Otherwise, delete COUNT chars at point.
+If COUNT is nil, delete one char."
+  (interactive "P")
+  (if (use-region-p)
+      (kill-region (region-beginning) (region-end))
+    (delete-char (or count 1))))
+
+(defun kakit-join-lines (&optional count)
+  "Join COUNT lines starting from the current line.
+If COUNT is nil, join the current line with the next line.
+
+Does nothing if the current line is the last line in the buffer."
+  (interactive "P")
+  (let ((count (or count 1)))
+    (dotimes (_ count)
+      (join-line t))))
+
+(defun kakit-change (&optional count)
+  "Delete the selected region or COUNT chars at point, then switch to insert mode.
+If COUNT is nil, delete one character."
+  (interactive "P")
+  (kakit-kill-region-or-char count)
+  (kakit-switch-to-insert-mode-local))
+
+(defun kakit--replace-region-or-char-with (char)
+  "Replace selection or char at point with the CHAR.
+If a region is active, replace the entire region with CHAR
+repeated to match the region's length."
+  (if (use-region-p)
+      (let* ((beg (region-beginning))
+             (end (region-end))
+             (len (- end beg)))
+        (delete-region beg end)
+        (insert-char char len))
+    (progn
+      (kakit-kill-region-or-char)
+      (insert-char char 1))))
 
 (provide 'kakit-commands-text-manipulation)
 #+end_src
