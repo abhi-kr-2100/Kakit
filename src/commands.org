@@ -240,6 +240,14 @@ the line and point stays at the end."
     (set-mark-command nil))
   (next-line count))
 
+(defun kakit-goto-line (line)
+  "Move point to LINE number.
+If LINE is nil or <= 0, do nothing."
+  (interactive "P")
+  (when (and line (> line 0))
+    (goto-char (point-min))
+    (forward-line (1- line))))
+
 (provide 'kakit-commands-movement-line-based)
 #+end_src
 

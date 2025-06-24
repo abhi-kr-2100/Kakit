@@ -85,6 +85,7 @@ and reset it to nil after the command is called."
     (define-key keymap (kbd "F") 'kakit-switch-to-command-pending-mode-for-find-backward)
     (define-key keymap (kbd "t") 'kakit-switch-to-command-pending-mode-for-till)
     (define-key keymap (kbd "T") 'kakit-switch-to-command-pending-mode-for-till-backward)
+    (define-key keymap (kbd "G") (kakit--with-prefix-arg 'kakit-goto-line))
     keymap)
   "Custom keymaps for Kakit's Normal state.")
 
